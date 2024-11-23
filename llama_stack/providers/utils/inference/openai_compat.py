@@ -45,6 +45,9 @@ def get_sampling_options(params: SamplingParams) -> dict:
 def text_from_choice(choice) -> str:
     if hasattr(choice, "delta") and choice.delta:
         return choice.delta.content
+    
+    if hasattr(choice, "message"):
+        return choice.message.content
 
     if hasattr(choice, "message"):
         return choice.message.content

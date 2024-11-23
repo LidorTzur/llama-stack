@@ -150,4 +150,13 @@ def available_providers() -> List[ProviderSpec]:
                 config_class="llama_stack.providers.remote.inference.databricks.DatabricksImplConfig",
             ),
         ),
+        remote_provider_spec(
+            api=Api.inference,
+            adapter=AdapterSpec(
+                adapter_type="azure-ai-inference",
+                pip_packages=["azure-ai-inference", "azure-identity", "aiohttp"],
+                module="llama_stack.providers.remote.inference.azure_ai_inference",
+                config_class="llama_stack.providers.remote.inference.azure_ai_inference.AzureAIInferenceConfig",
+            ),
+        ),
     ]
