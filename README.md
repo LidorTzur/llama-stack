@@ -82,6 +82,7 @@ Additionally, we have designed every element of the Stack such that APIs as well
 |  Meta Reference  |  Single Node | :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |  :heavy_check_mark:  |
 |  Fireworks  |  Hosted  | :heavy_check_mark:  | :heavy_check_mark:  |  :heavy_check_mark:  |    |   |
 |  AWS Bedrock  |  Hosted  |    |  :heavy_check_mark:  |    | :heavy_check_mark:  | |
+|  Snowflake  |  Hosted  |    |  :heavy_check_mark:  |    |   |
 |  Together  |  Hosted  |  :heavy_check_mark:  |  :heavy_check_mark:  |   | :heavy_check_mark:  |  |
 |  Ollama  | Single Node   |    |  :heavy_check_mark:  |    |   |
 |  TGI  |  Hosted and Single Node  |    |  :heavy_check_mark:  |    |   |
