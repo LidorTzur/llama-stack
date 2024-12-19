@@ -32,6 +32,7 @@ from llama_stack.providers.utils.inference.prompt_adapter import (
     interleaved_content_as_str,
     request_has_media,
 )
+from ..nvidia.openai_utils import _convert_tooldef_to_openai_tool, convert_openai_chat_completion_choice
 
 from .config import FireworksImplConfig
 
@@ -64,6 +65,10 @@ MODEL_ALIASES = [
     build_model_alias(
         "fireworks/llama-v3p2-90b-vision-instruct",
         CoreModelId.llama3_2_90b_vision_instruct.value,
+    ),
+    build_model_alias(
+        "fireworks/llama-v3p3-70b-instruct",
+        CoreModelId.llama3_3_70b_instruct.value,
     ),
     build_model_alias(
         "fireworks/llama-guard-3-8b",
@@ -205,10 +210,12 @@ class FireworksInferenceAdapter(
     ) -> ChatCompletionResponse:
         params = await self._get_params(request)
         if "messages" in params:
+            print(params)
             r = await self._get_client().chat.completions.acreate(**params)
+            return convert_openai_chat_completion_choice(r.choices[0])
         else:
             r = await self._get_client().completion.acreate(**params)
-        return process_chat_completion_response(r, self.formatter)
+            return process_chat_completion_response(r, self.formatter)
 
     async def _stream_chat_completion(
         self, request: ChatCompletionRequest
@@ -236,14 +243,18 @@ class FireworksInferenceAdapter(
         media_present = request_has_media(request)
 
         if isinstance(request, ChatCompletionRequest):
-            if media_present:
-                input_dict["messages"] = [
-                    await convert_message_to_openai_dict(m) for m in request.messages
+            input_dict["messages"] = [
+                await convert_message_to_openai_dict(m) for m in request.messages
+            ]
+            # print(input_dict["messages"])
+            if request.tool_choice == ToolChoice.required:
+                input_dict["tool_choice"] = "any"
+            
+            if request.tools:
+                input_dict["tools"] = [
+                    _convert_tooldef_to_openai_tool(t) for t in request.tools
                 ]
-            else:
-                input_dict["prompt"] = await chat_completion_request_to_prompt(
-                    request, self.get_llama_model(request.model), self.formatter
-                )
+            # print(input_dict)
         else:
             assert (
                 not media_present
