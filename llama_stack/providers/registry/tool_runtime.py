@@ -25,6 +25,22 @@ def available_providers() -> List[ProviderSpec]:
             config_class="llama_stack.providers.inline.tool_runtime.brave_search.config.BraveSearchToolConfig",
             provider_data_validator="llama_stack.providers.inline.tool_runtime.brave_search.BraveSearchToolProviderDataValidator",
         ),
+        InlineProviderSpec(
+            api=Api.tool_runtime,
+            provider_type="inline::memory-runtime",
+            pip_packages=[],
+            module="llama_stack.providers.inline.tool_runtime.memory",
+            config_class="llama_stack.providers.inline.tool_runtime.memory.config.MemoryToolConfig",
+            api_dependencies=[Api.memory, Api.memory_banks, Api.inference],
+        ),
+        InlineProviderSpec(
+            api=Api.tool_runtime,
+            provider_type="inline::tavily-search",
+            pip_packages=[],
+            module="llama_stack.providers.inline.tool_runtime.tavily_search",
+            config_class="llama_stack.providers.inline.tool_runtime.tavily_search.config.TavilySearchToolConfig",
+            provider_data_validator="llama_stack.providers.inline.tool_runtime.tavily_search.TavilySearchToolProviderDataValidator",
+        ),
         remote_provider_spec(
             api=Api.tool_runtime,
             adapter=AdapterSpec(
